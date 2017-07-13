@@ -68,6 +68,15 @@ func (f *Feed) AddStories(s []Story) {
 	f.Stories = append(f.Stories, s...)
 }
 
+func (f *Feed) UnprocessedStories () (stories []Story){
+	for _, story := range f.Stories {
+		if !story.Processed {
+			stories = append(stories, story)
+		}
+	}
+	return
+}
+
 func (f *Feed) MarkAsProcessed(title string) {
 	for i, story := range f.Stories {
 		if story.Title == title {
@@ -76,9 +85,21 @@ func (f *Feed) MarkAsProcessed(title string) {
 	}
 }
 
-const storyTemplate = `<li>
-	<h2>{{.Title}}</h2> <h3>{{.Source}}</h3>{{.Description}} {{.Date}} <a href="{{.Link}}">story</a><button name="title" type="submit" value="{{.Title}}">Processed</button>
-	</li>`
+const storyTemplate = `
+<html>
+	<form action="/" method="post">
+		<ul>
+			{{range .}}
+			<li>
+				<h2>{{.Title}}</h2><h3>{{.Source}}</h3>{{.Description}} {{.Date}}
+				<a href="{{.Link}}">story</a>
+				<button name="title" type="submit" value="{{.Title}}">Processed</button>
+			</li>
+			{{end}}
+		</ul>
+	</form>
+</html>
+`
 
 func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
@@ -87,20 +108,9 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		f.MarkAsProcessed(title)
 	}
 
-	fmt.Fprintf(w, `<html><form action="/" method="post">`)
-	fmt.Fprintf(w, "<ul>")
+	tmpl, err := template.New("test").Parse(storyTemplate)
+	if err != nil { panic(err) }
 
-	for _, story := range f.Stories {
-		if story.Processed {
-			fmt.Fprintf(w, "<h1>Move along please</h1>")
-		} else {
-			tmpl, err := template.New("test").Parse(storyTemplate)
-			if err != nil { panic(err) }
-			err = tmpl.Execute(w, story)
-			if err != nil { panic(err) }
-		}
+	tmpl.Execute(w, f.UnprocessedStories())
 
-	}
-	fmt.Fprintf(w, "</ul>")
-	fmt.Fprintf(w, "</form></html>")
 }
