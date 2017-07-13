@@ -15,10 +15,9 @@ func main() {
 	feedServer := NewFeed()
 
 	sources := []*RSSFetcher {
-		NewRSSFetcher("http://feeds.bbci.co.uk/news/rss.xml?edition=uk", "bbc news", feedServer),
-		NewRSSFetcher("http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX", "LSE FTSE whatever", feedServer),
-		NewRSSFetcher("http://www.topazworld.com/en/rss/news", "Topaz", feedServer),
-		//NewRSSFetcher("https://twitrss.me/twitter_search_to_rss/?term=bieber", "Bieber News from Twitter", feedServer),
+		NewRSSFetcher("http://feeds.bbci.co.uk/news/rss.xml?edition=uk", "bbc news", ".story-body__inner", feedServer),
+		NewRSSFetcher("http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX", "LSE FTSE whatever", ".bg", feedServer),
+		NewRSSFetcher("http://www.topazworld.com/en/rss/news", "Topaz", "#content", feedServer),
 	}
 
 	for _, fetcher := range sources {
@@ -36,7 +35,7 @@ func main() {
 }
 
 type Story struct {
-	Title, Description, Source, Link string
+	Title, Description, Source, Link, Summary string
 	Date *time.Time
 	Processed bool
 }
@@ -112,6 +111,7 @@ const storyTemplate = `
 			<li>
 				<h2>{{.Title}}</h2><h3>{{.Source}}</h3>{{.Description}} {{.Date}}
 				<a href="{{.Link}}">story</a>
+				<p>{{.Summary}}</p>
 				<button name="title" type="submit" value="{{.Title}}">Processed</button>
 			</li>
 			{{end}}
