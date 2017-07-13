@@ -49,6 +49,7 @@ func StoriesFromFeed(url string, name string) (stories []Story) {
 type Story struct {
 	Title, Description, Source string
 	Date *time.Time
+	Processed bool
 }
 
 func NewFeed() *Feed {
@@ -69,7 +70,7 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<ul>")
 
 	for _, story := range f.Stories {
-		fmt.Fprintf(w, "<li><h2>%s</h2><h3>%s</h3>%s %s</li>", story.Title, story.Source, story.Description, story.Date)
+		fmt.Fprintf(w, "<li><h2>%s</h2><h3>%s</h3>%s %s	<button>Processed</button></li>", story.Title, story.Source, story.Description, story.Date)
 	}
 	fmt.Fprintf(w, "</ul>")
 	fmt.Fprintf(w, "</html>")
