@@ -29,12 +29,18 @@ func (r *RSSFetcher) GetStories() (stories []Story) {
 	feed, _ := fp.ParseURL(r.URL)
 
 	for _, article := range feed.Items {
+
+		datePublished := article.PublishedParsed
+		if datePublished==nil{
+			datePublished = &time.Now()
+		}
+
 		stories = append(stories, Story{
 			Title: article.Title,
 			Description: article.Description,
 			Link: article.Link,
 			Source:r.Name,
-			Date: article.PublishedParsed,
+			Date: datePublished,
 		})
 	}
 
