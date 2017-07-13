@@ -8,6 +8,7 @@ import (
 
 	"text/template"
 	"io"
+	"sync"
 )
 
 func main() {
@@ -50,11 +51,15 @@ func NewFeed() *Feed {
 type Feed struct {
 	Stories []Story
 	tmpl *template.Template
+	sync.Mutex
 }
 
 
 func (f *Feed) AddStories(s []Story) {
+	f.Lock()
+	defer f.Unlock()
 	f.Stories = append(f.Stories, s...)
+	log.Println("Number of contents is", len(f.Stories))
 }
 
 func (f *Feed) UnprocessedStories () (stories []Story){
