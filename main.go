@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"text/template"
 )
 
 func main() {
@@ -73,6 +75,10 @@ func (f *Feed) MarkAsProcessed(title string) {
 	}
 }
 
+const storyTemplate = `<li>
+	<h2>{{.Title}}</h2> <h3>{{.Source}}</h3>{{.Description}} {{.Date}} <button name="title" type="submit" value="{{.Title}}">Processed</button>
+	</li>`
+
 func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		r.ParseForm()
@@ -87,7 +93,10 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if story.Processed {
 			fmt.Fprintf(w, "<h1>Move along please</h1>")
 		} else {
-			fmt.Fprintf(w, `<li><h2>%s</h2><h3>%s</h3>%s %s	<button name="title" type="submit" value="%s">Processed</button></li>`, story.Title, story.Source, story.Description, story.Date, story.Title)
+			tmpl, err := template.New("test").Parse(storyTemplate)
+			if err != nil { panic(err) }
+			err = tmpl.Execute(w, story)
+			if err != nil { panic(err) }
 		}
 
 	}
