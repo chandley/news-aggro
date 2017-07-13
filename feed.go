@@ -27,17 +27,14 @@ type Feed struct {
 	sync.Mutex
 }
 
-func NewFeed() *Feed {
+func NewFeed(db *bolt.DB) *Feed {
 	storyTemplate, err := ioutil.ReadFile("./storyTemplate.html")
 	f := new(Feed)
 	tmpl, err := template.New("test").Parse(string(storyTemplate))
 	if err != nil { panic(err) }
 	f.tmpl = tmpl
 
-	db, err := bolt.Open("my.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+
 
 	f.DB = db
 

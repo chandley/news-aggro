@@ -4,10 +4,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"github.com/boltdb/bolt"
 )
 
 func main() {
-	feedServer := NewFeed()
+
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	feedServer := NewFeed(db)
 
 	sources := []*RSSFetcher {
 		//NewRSSFetcher("http://feeds.bbci.co.uk/news/rss.xml?edition=uk", "bbc news", ".story-body__inner"),
