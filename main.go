@@ -65,13 +65,32 @@ func (f *Feed) AddStories(s []Story) {
 	f.Stories = append(f.Stories, s...)
 }
 
+func (f *Feed) MarkAsProcessed(title string) {
+	for i, story := range f.Stories {
+		if story.Title == title {
+			f.Stories[i].Processed = true
+		}
+	}
+}
+
 func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<html>")
+	if r.Method == http.MethodPost {
+		r.ParseForm()
+		title := r.FormValue("title")
+		f.MarkAsProcessed(title)
+	}
+
+	fmt.Fprintf(w, `<html><form action="/" method="post">`)
 	fmt.Fprintf(w, "<ul>")
 
 	for _, story := range f.Stories {
-		fmt.Fprintf(w, "<li><h2>%s</h2><h3>%s</h3>%s %s	<button>Processed</button></li>", story.Title, story.Source, story.Description, story.Date)
+		if story.Processed {
+			fmt.Fprintf(w, "<h1>Move along please</h1>")
+		} else {
+			fmt.Fprintf(w, `<li><h2>%s</h2><h3>%s</h3>%s %s	<input name="title" type="submit" value="%s">Processed</input></li>`, story.Title, story.Source, story.Description, story.Date, story.Title)
+		}
+
 	}
 	fmt.Fprintf(w, "</ul>")
-	fmt.Fprintf(w, "</html>")
+	fmt.Fprintf(w, "</form></html>")
 }
