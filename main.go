@@ -21,7 +21,7 @@ func main() {
 	}
 
 	for _, fetcher := range sources {
-		feedServer.AddStories(fetcher.GetStories())
+		go feedServer.AddStories(fetcher.GetStories())
 		go fetcher.ListenForUpdates()
 	}
 
@@ -59,7 +59,7 @@ func (f *Feed) AddStories(s []Story) {
 
 	f.Lock()
 	defer f.Unlock()
-
+	startingNumberOfStories := len(f.Stories)
 
 	for _, newStory := range s {
 		duplicate := false
@@ -75,7 +75,11 @@ func (f *Feed) AddStories(s []Story) {
 		}
 	}
 
-	log.Println("Number of contents is", len(f.Stories))
+	newStoryCount := len(f.Stories) - startingNumberOfStories
+
+	if newStoryCount > 0 {
+		log.Println(newStoryCount, "new stories added")
+	}
 
 }
 
