@@ -10,8 +10,14 @@ import (
 func main() {
 	feedServer := NewFeed()
 
-	feedServer.AddStories(StoriesFromFeed("http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX"))
-	feedServer.AddStories(StoriesFromFeed("http://feeds.bbci.co.uk/news/rss.xml?edition=uk"))
+	sources := map[string]string {
+		"bbc news": "http://feeds.bbci.co.uk/news/rss.xml?edition=uk",
+		"LSE FTSE whatever": "http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX",
+	}
+
+	for name, url := range sources {
+		feedServer.AddStories(StoriesFromFeed(url, name))
+	}
 
 	router := http.NewServeMux()
 	router.Handle("/", feedServer)
@@ -22,12 +28,16 @@ func main() {
 	}
 }
 
-func StoriesFromFeed(url string) (stories []Story) {
+func StoriesFromFeed(url string, source string) (stories []Story) {
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL(url)
 
 	for _, article := range feed.Items {
-		stories = append(stories, Story{Title: article.Title, Description: article.Description})
+		stories = append(stories, Story{
+			Title: article.Title,
+			Description: article.Description,
+			Source:source,
+		})
 	}
 
 	return
@@ -35,7 +45,7 @@ func StoriesFromFeed(url string) (stories []Story) {
 }
 
 type Story struct {
-	Title, Description string
+	Title, Description, Source string
 }
 
 func NewFeed() *Feed {
@@ -46,9 +56,6 @@ type Feed struct {
 	Stories []Story
 }
 
-func (f *Feed) AddStory(s Story) {
-	f.Stories = append(f.Stories, s)
-}
 
 func (f *Feed) AddStories(s []Story) {
 	f.Stories = append(f.Stories, s...)
@@ -59,7 +66,7 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<ul>")
 
 	for _, story := range f.Stories {
-		fmt.Fprintf(w, "<li><h2>%s</h2>%s</li>", story.Title, story.Description)
+		fmt.Fprintf(w, "<li><h2>%s</h2><h3>%s</h3>%s</li>", story.Title, story.Source, story.Description)
 	}
 	fmt.Fprintf(w, "</ul>")
 	fmt.Fprintf(w, "</html>")
