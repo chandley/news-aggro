@@ -14,13 +14,16 @@ type RSSFetcher struct{
 	URL string
 	Name string
 	Aggregator Aggregator
+	Titles map[string]int
 }
 
 func NewRSSFetcher(url string, name string, aggregator Aggregator) *RSSFetcher {
+	titles := make(map[string]int)
 	return &RSSFetcher{
 		URL: url,
 		Name: name,
 		Aggregator:aggregator,
+		Titles:titles,
 	}
 }
 
@@ -29,6 +32,13 @@ func (r *RSSFetcher) GetStories() (stories []Story) {
 	feed, _ := fp.ParseURL(r.URL)
 
 	for _, article := range feed.Items {
+
+		if _, exists := r.Titles[article.Title]; exists {
+			continue
+		}
+
+		r.Titles[article.Title] = 0
+
 
 		datePublished := article.PublishedParsed
 		if datePublished==nil{
