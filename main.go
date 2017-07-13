@@ -123,6 +123,15 @@ func (f *Feed) AddStories(s []Story) {
 
 	newStoryCount := len(f.Stories) - startingNumberOfStories
 
+	f.SaveStories()
+
+	if newStoryCount > 0 {
+		log.Println(newStoryCount, "new stories added")
+	}
+
+}
+
+func (f *Feed) SaveStories() {
 	err := f.DB.Update(func(tx *bolt.Tx) error {
 		storiesAsJSON, _ := json.Marshal(f.Stories)
 		b := tx.Bucket([]byte("feed"))
@@ -133,11 +142,6 @@ func (f *Feed) AddStories(s []Story) {
 	if err != nil {
 		log.Println("Problem persisting stories to bolt")
 	}
-
-	if newStoryCount > 0 {
-		log.Println(newStoryCount, "new stories added")
-	}
-
 }
 
 func (f *Feed) UnprocessedStories () (stories []Story){
@@ -156,6 +160,7 @@ func (f *Feed) MarkAsProcessed(title string) {
 	for i, story := range f.Stories {
 		if story.Title == title {
 			f.Stories[i].Processed = true
+			f.SaveStories()
 		}
 	}
 }
