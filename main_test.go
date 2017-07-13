@@ -18,10 +18,18 @@ func TestFeed_AddStories(t *testing.T) {
 		assert.Len(t, feed.Stories, 1, "adds a story")
 	})
 
-	t.Run("does not add the same story twice", func(t *testing.T) {
+	t.Run("does not add a story with matching title and source", func(t *testing.T) {
 		var feed = NewFeed();
 		feed.AddStories([]Story{testStory})
 		feed.AddStories([]Story{testStory})
 		assert.Len(t, feed.Stories, 1, "does not add the same story twice")
 	})
+
+	t.Run("adds story with same title but different source", func(t *testing.T) {
+		var feed = NewFeed();
+		feed.AddStories([]Story{testStory})
+		feed.AddStories([]Story{{Title: "test", Source: "reuters"}})
+		assert.Len(t, feed.Stories, 2, "does not add the same story twice")
+	})
 }
+
