@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"text/template"
+	"io"
 )
 
 func main() {
@@ -56,11 +57,16 @@ type Story struct {
 }
 
 func NewFeed() *Feed {
-	return new(Feed)
+	f := new(Feed)
+	tmpl, err := template.New("test").Parse(storyTemplate)
+	if err != nil { panic(err) }
+	f.tmpl = tmpl
+	return f
 }
 
 type Feed struct {
 	Stories []Story
+	tmpl *template.Template
 }
 
 
@@ -83,6 +89,10 @@ func (f *Feed) MarkAsProcessed(title string) {
 			f.Stories[i].Processed = true
 		}
 	}
+}
+
+func (f *Feed) RenderFeedAsHTML(out io.Writer) {
+	f.tmpl.Execute(out, f.UnprocessedStories())
 }
 
 const storyTemplate = `
@@ -108,9 +118,6 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		f.MarkAsProcessed(title)
 	}
 
-	tmpl, err := template.New("test").Parse(storyTemplate)
-	if err != nil { panic(err) }
-
-	tmpl.Execute(w, f.UnprocessedStories())
+	f.RenderFeedAsHTML(w)
 
 }
