@@ -20,6 +20,7 @@ func main() {
 		NewRSSFetcher("http://www.topazworld.com/en/rss/news", "Topaz", "#content", feedServer),
 		NewRSSFetcher("https://twitrss.me/twitter_search_to_rss/?term=bieber", "Bieber News from Twitter", ".tweet-text", feedServer),
 		NewRSSFetcher("https://twitrss.me/twitter_user_to_rss/?user=quii", "Chris James News from Twitter", ".tweet-text",feedServer),
+		NewRSSFetcher("https://twitrss.me/twitter_user_to_rss/?user=chrisrhandley", "Chris Handley News from Twitter", ".tweet-text",feedServer),
 	}
 
 	for _, fetcher := range sources {
@@ -110,7 +111,9 @@ func (f *Feed) RenderFeedAsHTML(out io.Writer) {
 }
 
 const storyTemplate = `
+
 <html>
+<meta http-equiv="refresh" content="5; URL=http://localhost:8080">
 	<form action="/" method="post">
 		<ul>
 			{{range .}}
