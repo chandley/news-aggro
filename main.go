@@ -25,7 +25,9 @@ func main() {
 	}
 
 	for _, fetcher := range sources {
-		go feedServer.AddStories(fetcher.GetStories())
+		go func() {
+			feedServer.AddStories(fetcher.GetStories())
+		}()
 		go fetcher.ListenForUpdates()
 	}
 
