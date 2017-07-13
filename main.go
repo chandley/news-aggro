@@ -5,6 +5,7 @@ import (
 	"github.com/mmcdole/gofeed"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 	}
 }
 
-func StoriesFromFeed(url string, source string) (stories []Story) {
+func StoriesFromFeed(url string, name string) (stories []Story) {
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL(url)
 
@@ -36,7 +37,8 @@ func StoriesFromFeed(url string, source string) (stories []Story) {
 		stories = append(stories, Story{
 			Title: article.Title,
 			Description: article.Description,
-			Source:source,
+			Source:name,
+			Date: article.PublishedParsed,
 		})
 	}
 
@@ -46,6 +48,7 @@ func StoriesFromFeed(url string, source string) (stories []Story) {
 
 type Story struct {
 	Title, Description, Source string
+	Date *time.Time
 }
 
 func NewFeed() *Feed {
@@ -66,7 +69,7 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<ul>")
 
 	for _, story := range f.Stories {
-		fmt.Fprintf(w, "<li><h2>%s</h2><h3>%s</h3>%s</li>", story.Title, story.Source, story.Description)
+		fmt.Fprintf(w, "<li><h2>%s</h2><h3>%s</h3>%s %s</li>", story.Title, story.Source, story.Description, story.Date)
 	}
 	fmt.Fprintf(w, "</ul>")
 	fmt.Fprintf(w, "</html>")
