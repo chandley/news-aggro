@@ -56,10 +56,27 @@ type Feed struct {
 
 
 func (f *Feed) AddStories(s []Story) {
+
 	f.Lock()
 	defer f.Unlock()
-	f.Stories = append(f.Stories, s...)
+
+
+	for _, newStory := range s {
+		duplicate := false
+		for _, existingStory := range f.Stories {
+			if newStory.Title == existingStory.Title && newStory.Source == existingStory.Source {
+				duplicate = true
+			}
+		}
+		if !duplicate {
+			f.Stories = append(f.Stories, newStory)
+		} else {
+			log.Println("duplicate detected:", newStory.Title, newStory.Source)
+		}
+	}
+
 	log.Println("Number of contents is", len(f.Stories))
+
 }
 
 func (f *Feed) UnprocessedStories () (stories []Story){
