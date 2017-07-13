@@ -21,6 +21,7 @@ func main() {
 		NewRSSFetcher("https://twitrss.me/twitter_search_to_rss/?term=bieber", "Bieber News from Twitter", ".tweet-text", feedServer),
 		NewRSSFetcher("https://twitrss.me/twitter_user_to_rss/?user=quii", "Chris James News from Twitter", ".tweet-text",feedServer),
 		NewRSSFetcher("https://twitrss.me/twitter_user_to_rss/?user=chrisrhandley", "Chris Handley News from Twitter", ".tweet-text",feedServer),
+		NewRSSFetcher("http://lorem-rss.herokuapp.com/feed?unit=second&interval=10", "Lorem ipsum feed", ".none",feedServer),
 	}
 
 	for _, fetcher := range sources {
