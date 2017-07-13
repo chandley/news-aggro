@@ -87,7 +87,7 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if story.Processed {
 			fmt.Fprintf(w, "<h1>Move along please</h1>")
 		} else {
-			fmt.Fprintf(w, `<li><h2>%s</h2><h3>%s</h3>%s %s	<input name="title" type="submit" value="%s">Processed</input></li>`, story.Title, story.Source, story.Description, story.Date, story.Title)
+			fmt.Fprintf(w, `<li><h2>%s</h2><h3>%s</h3>%s %s	<button name="title" type="submit" value="%s">Processed</button></li>`, story.Title, story.Source, story.Description, story.Date, story.Title)
 		}
 
 	}
