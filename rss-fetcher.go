@@ -37,8 +37,6 @@ func (r *RSSFetcher) GetStories() (stories []Story) {
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL(r.URL)
 
-
-
 	for _, article := range feed.Items {
 
 		if _, exists := r.Titles[article.Title]; exists {
