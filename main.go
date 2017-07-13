@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/mmcdole/gofeed"
 	"log"
 	"net/http"
 	"time"
@@ -14,14 +13,15 @@ import (
 func main() {
 	feedServer := NewFeed()
 
-	sources := map[string]string {
-		"bbc news": "http://feeds.bbci.co.uk/news/rss.xml?edition=uk",
-		"LSE FTSE whatever": "http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX",
-		"Topaz": "http://www.topazworld.com/en/rss/news",
+	sources := []*RSSFetcher {
+		NewRSSFetcher("http://feeds.bbci.co.uk/news/rss.xml?edition=uk", "bbc news", feedServer),
+		NewRSSFetcher("http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX", "LSE FTSE whatever", feedServer),
+		NewRSSFetcher("http://www.topazworld.com/en/rss/news", "Topaz", feedServer),
 	}
 
-	for name, url := range sources {
-		feedServer.AddStories(StoriesFromFeed(url, name))
+	for _, fetcher := range sources {
+		feedServer.AddStories(fetcher.GetStories())
+		go fetcher.ListenForUpdates()
 	}
 
 	router := http.NewServeMux()
@@ -31,24 +31,6 @@ func main() {
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func StoriesFromFeed(url string, name string) (stories []Story) {
-	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL(url)
-
-	for _, article := range feed.Items {
-		stories = append(stories, Story{
-			Title: article.Title,
-			Description: article.Description,
-			Link: article.Link,
-			Source:name,
-			Date: article.PublishedParsed,
-		})
-	}
-
-	return
-
 }
 
 type Story struct {
