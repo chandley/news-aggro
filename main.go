@@ -114,6 +114,21 @@ func (f *Feed) RenderFeedAsHTML(out io.Writer) {
 const storyTemplate = `
 
 <html>
+<style>
+body{
+	font-family:Arial;
+}
+li {
+background: #f3e5f5;
+list-style:none;
+display:block;
+width:100%;
+float:left;
+padding: 5px
+border-bottom: 1px solid black;
+}
+li:nth-child(odd) { background: #c0b3c2; }
+</style>
 <meta http-equiv="refresh" content="5; URL=http://localhost:8080">
 	<form action="/" method="post">
 		<ul>
