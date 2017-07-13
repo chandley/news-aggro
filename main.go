@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 	"time"
-
 	"text/template"
 	"io"
 	"sync"
+	"sort"
 )
 
 func main() {
@@ -85,7 +85,10 @@ func (f *Feed) UnprocessedStories () (stories []Story){
 			stories = append(stories, story)
 		}
 	}
+	sort.Slice(stories, func(i, j int) bool { return stories[i].Date.After(*stories[j].Date) })
 	return
+
+
 }
 
 func (f *Feed) MarkAsProcessed(title string) {
