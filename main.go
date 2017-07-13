@@ -9,6 +9,8 @@ import (
 	"io"
 	"sync"
 	"sort"
+	"github.com/boltdb/bolt"
+	"encoding/json"
 )
 
 func main() {
@@ -25,9 +27,6 @@ func main() {
 	}
 
 	for _, fetcher := range sources {
-		go func() {
-			feedServer.AddStories(fetcher.GetStories())
-		}()
 		go fetcher.ListenForUpdates()
 	}
 
@@ -51,12 +50,55 @@ func NewFeed() *Feed {
 	tmpl, err := template.New("test").Parse(storyTemplate)
 	if err != nil { panic(err) }
 	f.tmpl = tmpl
+
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f.DB = db
+
+	db.Update(func(tx *bolt.Tx) error {
+		_ , err := tx.CreateBucket([]byte("feed"))
+		if err != nil {
+			return fmt.Errorf("create bucket: %s", err)
+		}
+		return nil
+	})
+
+
+	err = db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("feed"))
+		rawStories := b.Get([]byte("stories"))
+
+		if rawStories != nil {
+			var storiesFromDisk []Story
+
+			err := json.Unmarshal( rawStories, &storiesFromDisk)
+			if err != nil {
+				log.Println("problem parsing stories from bolt", err)
+				return nil
+			}
+
+			log.Println("Loaded", len(storiesFromDisk), "from db", storiesFromDisk[0].Title)
+			f.AddStories(storiesFromDisk)
+
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Println("problem loading stories from bolt", err)
+	}
+
+
 	return f
 }
 
 type Feed struct {
 	Stories []Story
 	tmpl *template.Template
+	DB *bolt.DB
 	sync.Mutex
 }
 
@@ -76,12 +118,21 @@ func (f *Feed) AddStories(s []Story) {
 		}
 		if !duplicate {
 			f.Stories = append(f.Stories, newStory)
-		} else {
-			log.Println("duplicate detected:", newStory.Title, newStory.Source)
 		}
 	}
 
 	newStoryCount := len(f.Stories) - startingNumberOfStories
+
+	err := f.DB.Update(func(tx *bolt.Tx) error {
+		storiesAsJSON, _ := json.Marshal(f.Stories)
+		b := tx.Bucket([]byte("feed"))
+		err := b.Put([]byte("stories"), storiesAsJSON)
+		return err
+	})
+
+	if err != nil {
+		log.Println("Problem persisting stories to bolt")
+	}
 
 	if newStoryCount > 0 {
 		log.Println(newStoryCount, "new stories added")
