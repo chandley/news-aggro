@@ -39,6 +39,7 @@ func StoriesFromFeed(url string, name string) (stories []Story) {
 		stories = append(stories, Story{
 			Title: article.Title,
 			Description: article.Description,
+			Link: article.Link,
 			Source:name,
 			Date: article.PublishedParsed,
 		})
@@ -49,7 +50,7 @@ func StoriesFromFeed(url string, name string) (stories []Story) {
 }
 
 type Story struct {
-	Title, Description, Source string
+	Title, Description, Source, Link string
 	Date *time.Time
 	Processed bool
 }
@@ -76,7 +77,7 @@ func (f *Feed) MarkAsProcessed(title string) {
 }
 
 const storyTemplate = `<li>
-	<h2>{{.Title}}</h2> <h3>{{.Source}}</h3>{{.Description}} {{.Date}} <button name="title" type="submit" value="{{.Title}}">Processed</button>
+	<h2>{{.Title}}</h2> <h3>{{.Source}}</h3>{{.Description}} {{.Date}} <a href="{{.Link}}">story</a><button name="title" type="submit" value="{{.Title}}">Processed</button>
 	</li>`
 
 func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
