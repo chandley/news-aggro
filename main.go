@@ -18,6 +18,8 @@ func main() {
 		NewRSSFetcher("http://feeds.bbci.co.uk/news/rss.xml?edition=uk", "bbc news", ".story-body__inner", feedServer),
 		NewRSSFetcher("http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX", "LSE FTSE whatever", ".bg", feedServer),
 		NewRSSFetcher("http://www.topazworld.com/en/rss/news", "Topaz", "#content", feedServer),
+		NewRSSFetcher("https://twitrss.me/twitter_search_to_rss/?term=bieber", "Bieber News from Twitter", ".tweet-text", feedServer),
+		NewRSSFetcher("https://twitrss.me/twitter_user_to_rss/?user=quii", "Chris James News from Twitter", ".tweet-text",feedServer),
 	}
 
 	for _, fetcher := range sources {
