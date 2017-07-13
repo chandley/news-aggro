@@ -17,6 +17,7 @@ func main() {
 	sources := map[string]string {
 		"bbc news": "http://feeds.bbci.co.uk/news/rss.xml?edition=uk",
 		"LSE FTSE whatever": "http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX",
+		"Topaz": "http://www.topazworld.com/en/rss/news",
 	}
 
 	for name, url := range sources {
