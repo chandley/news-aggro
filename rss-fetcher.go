@@ -13,10 +13,17 @@ type Aggregator interface{
 	AddStories(s []Story)
 }
 
-type RSSFetchers []*RSSFetcher
+type RSSFetchers struct {
+	Sources []*RSSFetcher
+	Aggregator Aggregator
+}
+
+func NewRSSFetchers(aggregator Aggregator) RSSFetchers {
+	return RSSFetchers{Aggregator: aggregator}
+}
 
 func (f *RSSFetchers) GetNames() (names []string) {
-	for _, fetcher := range *f {
+	for _, fetcher := range f.Sources {
 		names = append(names, fetcher.Name);
 	}
 	log.Println("Sources %p", f)
@@ -27,7 +34,10 @@ func (f *RSSFetchers) Add(url string, name string, selector string) {
 	log.Println("Adding to Sources %p", f)
 
 	log.Println("Adding new source", url, name, selector)
-	*f = append(*f, NewRSSFetcher(url, name, selector))
+	newFetcher := NewRSSFetcher(url, name, selector)
+
+	f.Sources = append(f.Sources, newFetcher)
+	go newFetcher.GiveNewStoriesTo(f.Aggregator)
 }
 
 type RSSFetcher struct{
