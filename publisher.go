@@ -13,7 +13,7 @@ type DebtwireAsLive struct {
 }
 
 // sends an intel to rabbit
-func (d *DebtwireAsLive) Publish(someBody string) error {
+func (d *DebtwireAsLive) Publish(someBody string, title string) error {
 
 
 	os.Setenv("INTEL_STORE_RABBIT_URL", "amqp://notifications:4mtECyQRQYnxjvaLyCpfbHvd6Rb@orange-wasp.rmq.cloudamqp.com/intelligence-store-service-aslive")

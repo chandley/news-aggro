@@ -40,7 +40,7 @@ func main() {
 }
 
 type ContentHub interface {
-	Publish(body string) error
+	Publish(body string, title string) error
 }
 
 type StoryDatabase interface{
@@ -63,7 +63,7 @@ func (p *Publisher) ServeHTTP(w http.ResponseWriter,r *http.Request) {
 
 	if r.Method==http.MethodPost{
 		r.ParseForm()
-		p.contentHub.Publish(r.FormValue("message-body"))
+		p.contentHub.Publish(r.FormValue("message-body"), r.FormValue("title"))
 	}
 
 	publishForm, err := ioutil.ReadFile("./publish-form.html")
