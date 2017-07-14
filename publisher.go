@@ -14,12 +14,6 @@ type DebtwireAsLive struct {
 
 // sends an intel to rabbit
 func (d *DebtwireAsLive) Publish(someBody string, title string) error {
-
-
-	os.Setenv("INTEL_STORE_RABBIT_URL", "amqp://notifications:4mtECyQRQYnxjvaLyCpfbHvd6Rb@orange-wasp.rmq.cloudamqp.com/intelligence-store-service-aslive")
-os.Setenv("INTEL_EXCHANGE_NAME", "aslive-intel-pipeline-versioned")
-os.Setenv("TEST_EXCHANGE", "chandleyTest")
-
 	fmt.Println("INTEL_STORE_RABBIT_URL:", os.Getenv("INTEL_STORE_RABBIT_URL"))
 	fmt.Println("INTEL_EXCHANGE_NAME:", os.Getenv("INTEL_EXCHANGE_NAME"))
 	fmt.Println("TEST:", os.Getenv("TEST_EXCHANGE"))
