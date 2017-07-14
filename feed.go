@@ -90,6 +90,7 @@ func (f *Feed) AddStories(s []Story) {
 
 	newStoryCount := len(f.Stories) - startingNumberOfStories
 
+	f.SortStoriesByDate();
 	f.SaveStories()
 
 	if newStoryCount > 0 {
@@ -97,6 +98,11 @@ func (f *Feed) AddStories(s []Story) {
 	}
 
 }
+
+func (f *Feed) SortStoriesByDate() (){
+	sort.Slice(f.Stories, func(i, j int) bool { return f.Stories[i].Date.After(*f.Stories[j].Date) })
+}
+
 
 func (f *Feed) SaveStories() {
 	err := f.DB.Update(func(tx *bolt.Tx) error {
@@ -111,10 +117,6 @@ func (f *Feed) SaveStories() {
 	}
 }
 
-func (f *Feed) RenderFeedAsHTML(out io.Writer) {
-	f.tmpl.Execute(out, f.StoriesSortedByDate())
-}
-
 func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		r.ParseForm()
@@ -123,6 +125,10 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	f.RenderFeedAsHTML(w)
+}
+
+func (f *Feed) RenderFeedAsHTML(out io.Writer) {
+	f.tmpl.Execute(out, f.Stories)
 }
 
 func (f *Feed) MarkAsProcessed(title string) {
@@ -134,10 +140,5 @@ func (f *Feed) MarkAsProcessed(title string) {
 	}
 }
 
-func (f *Feed) StoriesSortedByDate() (stories []Story){
-	stories = f.Stories
-	sort.Slice(stories, func(i, j int) bool { return stories[i].Date.After(*stories[j].Date) })
-	return
-}
 
 
