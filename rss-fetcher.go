@@ -66,13 +66,10 @@ func (f *RSSFetchers) GetNames() (names []string) {
 	for _, fetcher := range f.Sources {
 		names = append(names, fetcher.Name);
 	}
-	log.Println("Sources %p", f)
 	return
 }
 
 func (f *RSSFetchers) Add(url string, name string, selector string) {
-	log.Println("Adding to Sources %p", f)
-
 	log.Println("Adding new source", url, name, selector)
 	newFetcher := NewRSSFetcher(url, name, selector)
 
@@ -131,37 +128,47 @@ func (r *RSSFetcher) GetStories() (stories []Story) {
 			datePublished = &now
 		}
 
+		body, summary := createSummary(article.Link, r.BodySelector)
+
 		stories = append(stories, Story{
 			Title: article.Title,
 			Description: article.Description,
 			Link: article.Link,
 			Source:r.Name,
 			Date: datePublished,
-			Summary:createSummary(article.Link, r.BodySelector),
+			Summary:summary,
 			Processed: false,
+			Body:body,
 		})
 	}
 
 	return
 }
 
-func createSummary(url, selector string) string {
+func createSummary(url, selector string) (fullBody string, summary string) {
+
+	fullBody = "unable to get content"
+	summary = "unable to get content"
 
 	bag := tldr.New()
 	bag.Set(300, tldr.DEFAULT_DAMPING, tldr.DEFAULT_TOLERANCE, tldr.DEFAULT_THRESHOLD, tldr.DEFAULT_SENTENCES_DISTANCE_THRESHOLD, tldr.DEFAULT_ALGORITHM, tldr.DEFAULT_WEIGHING)
 
 
 	res, _ := http.Get(url)
-	defer res.Body.Close()
 
-	doc, _ := goquery.NewDocumentFromReader(res.Body)
+	if res.StatusCode == http.StatusOK {
+		defer res.Body.Close()
 
-	doc.Find("script").Each(func(i int, el *goquery.Selection) {
-		el.Remove()
-	})
+		doc, _ := goquery.NewDocumentFromReader(res.Body)
 
-	summary, _ := bag.Summarize(doc.Find(selector).Text(), numberOfSentences)
-	return summary
+		doc.Find("script").Each(func(i int, el *goquery.Selection) {
+			el.Remove()
+		})
+
+		fullBody, _ = doc.Find(selector).Html()
+		summary, _ = bag.Summarize(doc.Find(selector).Text(), numberOfSentences)
+	}
+	return
 
 }
 

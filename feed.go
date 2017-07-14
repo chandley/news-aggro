@@ -11,7 +11,7 @@ import (
 )
 
 type Story struct {
-	Title, Description, Source, Link, Summary string
+	Title, Description, Source, Link, Summary, Body string
 	Date *time.Time
 	Processed bool
 }
