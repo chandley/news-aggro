@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"io/ioutil"
 	"log"
-	"fmt"
 )
 
 type StoryFeed interface{
@@ -22,17 +21,22 @@ type Server struct {
 	feed StoryFeed
 	sources SourcesList
 	feedTemplate *template.Template
+	publishTemplate *template.Template
 }
 
 func NewServer(feed StoryFeed, sources SourcesList) *Server{
 	storyTemplate, err := ioutil.ReadFile("./storyTemplate.html")
+	publishTemplate, err := ioutil.ReadFile("./publish-form.html")
 
 	tmpl, err := template.New("test").Parse(string(storyTemplate))
+	if err != nil { panic(err) }
+	tmplPublish, err := template.New("test").Parse(string(publishTemplate))
 	if err != nil { panic(err) }
 
 	return &Server{
 		feed:feed,
 		feedTemplate:tmpl,
+		publishTemplate: tmplPublish,
 		sources: sources,
 	}
 }
@@ -47,11 +51,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		} else  {
 			log.Println(r.FormValue("action"))
 			if len(r.FormValue("publish")) > 0  {
-				publishForm, err := ioutil.ReadFile("./publish-form.html") // TODO change to template with stuff
-				if err != nil {
-					panic("problem reading form")
-				}
-				fmt.Fprintf(w, string(publishForm))
+				s.publishTemplate.Execute(w, "banana")
+				//publishForm, err := ioutil.ReadFile("./publish-form.html") // TODO change to template with stuff
+				//if err != nil {
+				//	panic("problem reading form")
+				//}
+				//fmt.Fprintf(w, string(publishForm))
 				return
 			} else {
 				s.feed.MarkAsProcessed(r.FormValue("title"))
