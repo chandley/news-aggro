@@ -122,3 +122,13 @@ func (f *Feed) GetStories() []Story{
 	return f.Stories
 }
 
+func (f *Feed) GetStory(title string) (s Story) {
+	for _, story := range f.Stories {
+		if story.Title == title {
+			s = story
+			return
+		}
+	}
+	return
+}
+

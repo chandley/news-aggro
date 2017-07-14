@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"io/ioutil"
 	"log"
-	"fmt"
 )
 
 type StoryFeed interface{
@@ -40,18 +39,12 @@ func NewServer(feed StoryFeed, sources SourcesList) *Server{
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		r.ParseForm()
-		log.Println("xxxxxxxx")
-		log.Println(r.FormValue("action"))
 		if r.FormValue("action") =="addFeed" {
 			s.sources.Add(r.FormValue("url"), r.FormValue("name"), r.FormValue("selector"))
 		} else  {
 			log.Println(r.FormValue("action"))
 			if len(r.FormValue("publish")) > 0  {
-				publishForm, err := ioutil.ReadFile("./publish-form.html") // TODO change to template with stuff
-				if err != nil {
-					panic("problem reading form")
-				}
-				fmt.Fprintf(w, string(publishForm))
+				http.Redirect(w, r, "/publish?title="+r.FormValue("publish"), 301)
 				return
 			} else {
 				s.feed.MarkAsProcessed(r.FormValue("title"))

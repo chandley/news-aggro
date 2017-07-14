@@ -25,7 +25,7 @@ func main() {
 	//sources.Add("http://lorem-rss.herokuapp.com/feed?unit=second&interval=10", "Lorem ipsum feed", ".none"),
 
 	dwAsLive := DebtwireAsLive{}
-	publisher := NewPublisher(&dwAsLive)
+	publisher := NewPublisher(&dwAsLive, feed)
 
 	router := http.NewServeMux()
 	server := NewServer(feed, &sources)
@@ -43,13 +43,19 @@ type ContentHub interface {
 	Publish(body string) error
 }
 
-type Publisher struct {
-	contentHub ContentHub
+type StoryDatabase interface{
+	GetStory(title string) Story
 }
 
-func NewPublisher(contentHub ContentHub) *Publisher{
+type Publisher struct {
+	contentHub ContentHub
+	storyDatabase StoryDatabase
+}
+
+func NewPublisher(contentHub ContentHub, storyDatabase StoryDatabase) *Publisher{
 	return &Publisher{
 		contentHub:contentHub,
+		storyDatabase: storyDatabase,
 	}
 }
 
@@ -64,5 +70,11 @@ func (p *Publisher) ServeHTTP(w http.ResponseWriter,r *http.Request) {
 	if err != nil {
 		panic("problem reading form")
 	}
-	fmt.Fprintf(w, string(publishForm))
+
+	var body string
+	if r.URL.Query().Get("title")!=""{
+		body = p.storyDatabase.GetStory(r.URL.Query().Get("title")).Summary
+	}
+
+	fmt.Fprintf(w, string(publishForm), body)
 }
