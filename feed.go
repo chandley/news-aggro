@@ -1,17 +1,13 @@
 package main
 
 import (
-	"io"
 	"time"
-	"io/ioutil"
 	"github.com/boltdb/bolt"
 	"log"
 	"fmt"
-	"text/template"
 	"sync"
 	"sort"
 	"encoding/json"
-	"net/http"
 )
 
 type Story struct {
@@ -22,17 +18,13 @@ type Story struct {
 
 type Feed struct {
 	Stories []Story
-	tmpl *template.Template
 	DB *bolt.DB
 	sync.Mutex
 }
 
 func NewFeed(db *bolt.DB) *Feed {
-	storyTemplate, err := ioutil.ReadFile("./storyTemplate.html")
 	f := new(Feed)
-	tmpl, err := template.New("test").Parse(string(storyTemplate))
-	if err != nil { panic(err) }
-	f.tmpl = tmpl
+
 
 	f.DB = db
 
@@ -44,7 +36,7 @@ func NewFeed(db *bolt.DB) *Feed {
 		return nil
 	})
 
-	err = db.View(func(tx *bolt.Tx) error {
+	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("feed"))
 		rawStories := b.Get([]byte("stories"))
 
@@ -117,19 +109,6 @@ func (f *Feed) SaveStories() {
 	}
 }
 
-func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		r.ParseForm()
-		title := r.FormValue("title")
-		f.MarkAsProcessed(title)
-	}
-
-	f.RenderFeedAsHTML(w)
-}
-
-func (f *Feed) RenderFeedAsHTML(out io.Writer) {
-	f.tmpl.Execute(out, f.Stories)
-}
 
 func (f *Feed) MarkAsProcessed(title string) {
 	for i, story := range f.Stories {
@@ -140,5 +119,7 @@ func (f *Feed) MarkAsProcessed(title string) {
 	}
 }
 
-
+func (f *Feed) GetStories() []Story{
+	return f.Stories
+}
 

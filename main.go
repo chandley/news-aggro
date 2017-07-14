@@ -14,7 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	feedServer := NewFeed(db)
+	feed := NewFeed(db)
 
 	sources := []*RSSFetcher {
 		//NewRSSFetcher("http://feeds.bbci.co.uk/news/rss.xml?edition=uk", "bbc news", ".story-body__inner"),
@@ -30,11 +30,13 @@ func main() {
 	}
 
 	for _, fetcher := range sources {
-		go fetcher.GiveNewStoriesTo(feedServer)
+		go fetcher.GiveNewStoriesTo(feed)
 	}
 
 	router := http.NewServeMux()
-	router.Handle("/", feedServer)
+	server := NewServer(feed)
+
+	router.Handle("/", server)
 
 	fmt.Println("Listening on 8080")
 	if err := http.ListenAndServe(":8080", router); err != nil {
