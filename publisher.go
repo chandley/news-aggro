@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"strings"
 	"io/ioutil"
+	"math/rand"
+	"time"
 )
 
 type DebtwireAsLive struct {
@@ -18,7 +20,7 @@ func (d *DebtwireAsLive) Publish(someBody string, title string) error {
 	fmt.Println("INTEL_EXCHANGE_NAME:", os.Getenv("INTEL_EXCHANGE_NAME"))
 	fmt.Println("TEST:", os.Getenv("TEST_EXCHANGE"))
 	rabbitURL := os.Getenv("INTEL_STORE_RABBIT_URL")
-	//rabbitExchange := os.Getenv("INTEL_EXCHANGE_NAME")
+	rabbitExchange := os.Getenv("INTEL_EXCHANGE_NAME")
 	testExchange := os.Getenv("TEST_EXCHANGE")
 	conn, err := amqp.Dial(rabbitURL)
 	failOnError(err, "Failed to connect to RabbitMQ")
@@ -29,8 +31,8 @@ func (d *DebtwireAsLive) Publish(someBody string, title string) error {
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
-		testExchange,   // name
-		"fanout", // type
+		rabbitExchange,   // name
+		"topic", // type
 		true,     // durable
 		false,    // auto-deleted
 		false,    // internal
@@ -41,11 +43,13 @@ func (d *DebtwireAsLive) Publish(someBody string, title string) error {
 
 	body, err := ioutil.ReadFile("./intel.json")
 
-	replacedBody := fmt.Sprintf(string(body), someBody)
+	id := RandomString(10)
+
+	replacedBody := fmt.Sprintf(string(body), id, someBody)
 
 	err = ch.Publish(
 		testExchange, // exchange
-		"",     // routing key
+		"PublishIntelligence.V2",     // routing key
 		false,  // mandatory
 		false,  // immediate
 		amqp.Publishing{
@@ -73,4 +77,15 @@ func bodyFrom(args []string) string {
 		s = strings.Join(args[1:], " ")
 	}
 	return s
+}
+
+
+func RandomString(strlen int) string {
+	rand.Seed(time.Now().UTC().UnixNano())
+	const chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+	result := make([]byte, strlen)
+	for i := 0; i < strlen; i++ {
+		result[i] = chars[rand.Intn(len(chars))]
+	}
+	return string(result)
 }

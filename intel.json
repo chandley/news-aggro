@@ -7,7 +7,7 @@
   "UserId":200389218,
   "Retries":0,
   "payload":{
-    "id":"2374129",
+    "id":"%s",
     "headline":"Test DW notifications",
     "body":"%s",
     "dominantCountry":{
