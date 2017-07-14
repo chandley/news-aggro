@@ -6,6 +6,7 @@ import (
 	"github.com/JesusIslam/tldr"
 	"net/http"
 	"github.com/PuerkitoBio/goquery"
+	"log"
 )
 
 type Aggregator interface{
@@ -14,11 +15,19 @@ type Aggregator interface{
 
 type RSSFetchers []*RSSFetcher
 
-func (f RSSFetchers) GetNames() (names []string) {
-	for _, fetcher := range f {
+func (f *RSSFetchers) GetNames() (names []string) {
+	for _, fetcher := range *f {
 		names = append(names, fetcher.Name);
 	}
+	log.Println("Sources %p", f)
 	return
+}
+
+func (f *RSSFetchers) Add(url string, name string, selector string) {
+	log.Println("Adding to Sources %p", f)
+
+	log.Println("Adding new source", url, name, selector)
+	*f = append(*f, NewRSSFetcher(url, name, selector))
 }
 
 type RSSFetcher struct{

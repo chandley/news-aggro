@@ -34,7 +34,7 @@ func main() {
 	}
 
 	router := http.NewServeMux()
-	server := NewServer(feed, sources)
+	server := NewServer(feed, &sources)
 
 	router.Handle("/", server)
 

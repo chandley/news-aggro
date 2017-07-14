@@ -14,9 +14,14 @@
     }
     li:nth-child(odd) { background: #c0b3c2; }
 </style>
-<meta http-equiv="refresh" content="5; URL=http://localhost:8080">
+<meta http-equiv="refresh" content="30; URL=http://localhost:8080">
 <form action="/" method="post">
     {{ with .SourcesNames }}
+    <h2>Add new feed</h2>
+    <label for="name">Name</label><input type="text" name="name" /><br />
+    <label for="url">URL</label><input type="text" name="url" /><br />
+    <label for="selector">CSS Content selector</label><input type="text" name="selector" /><br />
+    <input type="submit" name="action" value="addFeed" />
     <ul>
         {{range .}}
         <li>

@@ -13,6 +13,7 @@ type StoryFeed interface{
 
 type SourcesList interface{
 	GetNames() []string
+	Add(url string, name string, selector string)
 }
 
 type Server struct {
@@ -37,7 +38,12 @@ func NewServer(feed StoryFeed, sources SourcesList) *Server{
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		r.ParseForm()
-		s.feed.MarkAsProcessed(r.FormValue("title"))
+
+		if r.FormValue("action") =="addFeed" {
+			s.sources.Add(r.FormValue("url"), r.FormValue("name"), r.FormValue("selector"))
+		} else {
+			s.feed.MarkAsProcessed(r.FormValue("title"))
+		}
 	}
 
 	type viewModel struct {
