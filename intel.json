@@ -1,0 +1,579 @@
+{
+  "Id":20611357,
+  "EntityType":"Intelligence",
+  "EntityId":2374129,
+  "reasonCode":"PublishIntelligence",
+  "DateCreated":"2017-05-23T13:12:57.946Z",
+  "UserId":200389218,
+  "Retries":0,
+  "payload":{
+    "id":"2374129",
+    "headline":"Test DW notifications",
+    "body":"<p> Test</p>",
+    "dominantCountry":{
+      "mmgid":"prime-FRO",
+      "name":"Faroe Islands"
+    },
+    "dominantSector":{
+      "mmgid":"prime-chemicalmat",
+      "name":"Chemicals and materials"
+    },
+    "dominantState":null,
+    "grade":"Confirmed",
+    "sources":[
+      {
+        "mmgid":"prime-839",
+        "name":"Economic Times - Duplicate source - please use The Economic Times",
+        "sourceNumber":1
+      }
+    ],
+    "sectors":[
+      {
+        "mmgid":"prime-chemicalmat",
+        "name":"Chemicals and materials",
+        "subsectors":[
+          {
+            "mmgid":"prime-constructionchem",
+            "name":"Construction chemicals"
+          }
+        ]
+      }
+    ],
+    "countries":[
+      {
+        "mmgid":"prime-FRO",
+        "name":"Faroe Islands"
+      }
+    ],
+    "municipalsSectors":[
+
+    ],
+    "origin":"prime",
+    "topics":[
+      {
+        "mmgid":"prime-activism_topic-13Dfilings",
+        "name":"13D filings",
+        "groupcode":"activism_topic"
+      },
+      {
+        "mmgid":"prime-activism_topic-bumpitrage",
+        "name":"Bumpitrage",
+        "groupcode":"activism_topic"
+      },
+      {
+        "mmgid":"prime-dw_topic_EU-AmExt_terms",
+        "name":"Amendment",
+        "groupcode":"dw_topic_EU"
+      },
+      {
+        "mmgid":"prime-wm_topic-topic9",
+        "name":"Companies for Sale",
+        "groupcode":"wm_topic"
+      }
+    ],
+    "bidders":[
+      {
+        "id":"1814091",
+        "name":"bobuncle",
+        "mmgid":"prime-1814091"
+      }
+    ],
+    "issuers":[
+      {
+        "id":"1814090",
+        "name":"testytest",
+        "mmgid":"prime-1814090"
+      }
+    ],
+    "targets":[
+      {
+        "id":"1814062",
+        "name":"#LLamasoft, Inc.",
+        "mmgid":"prime-1814062"
+      }
+    ],
+    "vendors":[
+      {
+        "id":"1814093",
+        "name":"DominantSectorTest",
+        "mmgid":"prime-1814093"
+      }
+    ],
+    "others":[
+      {
+        "id":"1018597",
+        "name":"Sexton Riley LLP",
+        "individuals":[
+          {
+            "name":"Mr Paul O'Brien",
+            "role":{
+              "mmgid":"prime-203769950",
+              "name":"Commercial Director"
+            },
+            "asof":"2016-09-10T00:00:00",
+            "id":"901488",
+            "mmgid":"prime-901488"
+          },
+          {
+            "name":"Harry Bacon",
+            "role":{
+              "mmgid":"prime-66605",
+              "name":"CEO"
+            },
+            "asof":"2017-02-02T00:00:00",
+            "id":"903016",
+            "mmgid":"prime-903016"
+          }
+        ],
+        "mmgid":"prime-1018597"
+      },
+      {
+        "id":"1018671",
+        "name":"BK Grupe UAB",
+        "aliases":[
+          "BK Grupė UAB"
+        ],
+        "mmgid":"prime-1018671"
+      }
+    ],
+    "geographies":{
+      "areas":[
+        {
+          "mmgid":"prime-europe",
+          "name":"Europe",
+          "regions":[
+            {
+              "mmgid":"prime-neurope",
+              "name":"Northern Europe",
+              "countries":[
+                {
+                  "mmgid":"prime-FRO",
+                  "name":"Faroe Islands",
+                  "isDominant":true,
+                  "states":[
+
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "obligors":[
+
+    ],
+    "trustees":[
+      {
+        "id":"134145",
+        "name":"Wells Fargo Bank, National Association",
+        "aliases":[
+          "Wells Fargo Bank, N.A."
+        ],
+        "universes":[
+          {
+            "mmgid":"prime-SERVICERS",
+            "universeType":"absuniversecode",
+            "name":"Servicers",
+            "siteEditionTagging":[
+              {
+                "mmgid":"prime-256_2",
+                "id":"256_2",
+                "product":"Abs",
+                "edition":"North America"
+              }
+            ]
+          },
+          {
+            "mmgid":"prime-highyield",
+            "universeType":"muniversecode",
+            "name":"High Yield/Unrated",
+            "siteEditionTagging":[
+              {
+                "mmgid":"prime-512_2",
+                "id":"512_2",
+                "product":"Municipals",
+                "edition":"North America"
+              }
+            ]
+          },
+          {
+            "mmgid":"prime-investmentgrade",
+            "universeType":"muniversecode",
+            "name":"Investment Grade",
+            "siteEditionTagging":[
+              {
+                "mmgid":"prime-512_2",
+                "id":"512_2",
+                "product":"Municipals",
+                "edition":"North America"
+              }
+            ]
+          },
+          {
+            "mmgid":"prime-restructuring",
+            "universeType":"muniversecode",
+            "name":"Restructuring",
+            "siteEditionTagging":[
+              {
+                "mmgid":"prime-512_2",
+                "id":"512_2",
+                "product":"Municipals",
+                "edition":"North America"
+              }
+            ]
+          },
+          {
+            "mmgid":"prime-stressed",
+            "universeType":"muniversecode",
+            "name":"Stressed",
+            "siteEditionTagging":[
+              {
+                "mmgid":"prime-512_2",
+                "id":"512_2",
+                "product":"Municipals",
+                "edition":"North America"
+              }
+            ]
+          }
+        ],
+        "mmgid":"prime-134145"
+      }
+    ],
+    "underwriters":[
+      {
+        "id":"9500",
+        "name":"UBS Investment Bank",
+        "aliases":[
+          "formerly UBS Warburg"
+        ],
+        "mmgid":"prime-9500"
+      }
+    ],
+    "servicers":[
+      {
+        "id":"353149",
+        "name":"ACA Management , L.L.C.",
+        "mmgid":"prime-353149"
+      }
+    ],
+    "depositors":[
+
+    ],
+    "borrowers":[
+
+    ],
+    "sellers":[
+      {
+        "id":"353149",
+        "name":"ACA Management , L.L.C.",
+        "trustSeries":[
+          {
+            "id":"223",
+            "name":"ACA Aquarius 2006-1 Ltd.",
+            "collateral":{
+              "type":{
+                "mmgid":"prime-cdo",
+                "description":"CDO"
+              },
+              "subType":{
+                "mmgid":"prime-sfmezz",
+                "description":"SF Mezz"
+              }
+            },
+            "mmgid":"prime-223"
+          }
+        ],
+        "universes":[
+          {
+            "mmgid":"prime-RESTRUCTURING",
+            "universeType":"absuniversecode",
+            "name":"Restructuring",
+            "siteEditionTagging":[
+              {
+                "mmgid":"prime-256_2",
+                "id":"256_2",
+                "product":"Abs",
+                "edition":"North America"
+              }
+            ]
+          }
+        ],
+        "mmgid":"prime-353149"
+      }
+    ],
+    "lenders":[
+
+    ],
+    "defendants":[
+      {
+        "id":"1018259",
+        "name":"The Cushing Renaissance Fund",
+        "mmgid":"prime-1018259"
+      }
+    ],
+    "plaintiffs":[
+      {
+        "id":"1017969",
+        "name":"L. E. Belcher, Inc.",
+        "aliases":[
+          "Leonard E. Belcher, Inc.",
+          "Previously, H.E. Kendall Petroleum Products Corp.",
+          "Previously, Nutting Oil Service"
+        ],
+        "mmgid":"prime-1017969"
+      }
+    ],
+    "value":{
+      "valueInMillions":{
+
+      }
+    },
+    "financialDetails":{
+      "stake":{
+        "mmgid":"prime-majority",
+        "name":"Majority (i.e. more than 30% inclusive)",
+        "percentage":null
+      },
+      "sizes":[
+        {
+          "band":{
+            "mmgid":"prime-small",
+            "name":"{[currency]} {[rangeMinDescription]}-{[rangeMaxDescription]}"
+          },
+          "currencies":{
+            "AUD":"50m-100m",
+            "CHF":"50m-100m",
+            "CNY":"400m-800m",
+            "EUR":"50m-100m",
+            "GBP":"30m-60m",
+            "HKD":"400m-800m",
+            "INR":"2bn-4bn",
+            "JPY":"5bn-10bn",
+            "USD":"50m-100m"
+          }
+        }
+      ]
+    },
+    "journalists":[
+
+    ],
+    "editors":[
+
+    ],
+    "intelligenceTypes":[
+      {
+        "mmgid":"prime-compforsale",
+        "name":"Companies for sale",
+        "subtypes":[
+          {
+            "mmgid":"prime-compforsale",
+            "name":"Companies for sale"
+          }
+        ]
+      }
+    ],
+    "publicSources":[
+      {
+        "mmgid":"prime-839",
+        "name":"Economic Times - Duplicate source - please use The Economic Times",
+        "sourceNumber":1
+      }
+    ],
+    "companyRelationshipGroups":[
+      {
+        "bidders":[
+          {
+            "id":"1814091",
+            "name":"bobuncle",
+            "localName":null,
+            "aliases":[
+
+            ],
+            "individuals":[
+
+            ],
+            "advisors":[
+
+            ],
+            "competitors":[
+
+            ],
+            "universes":[
+
+            ],
+            "mmgid":"prime-1814091"
+          }
+        ],
+        "issuers":[
+          {
+            "id":"1814090",
+            "name":"testytest",
+            "localName":null,
+            "aliases":[
+
+            ],
+            "individuals":[
+
+            ],
+            "advisors":[
+
+            ],
+            "competitors":[
+
+            ],
+            "universes":[
+
+            ],
+            "mmgid":"prime-1814090"
+          }
+        ],
+        "targets":[
+          {
+            "id":"1814062",
+            "name":"#LLamasoft, Inc.",
+            "localName":null,
+            "aliases":[
+
+            ],
+            "individuals":[
+
+            ],
+            "advisors":[
+
+            ],
+            "competitors":[
+
+            ],
+            "universes":[
+
+            ],
+            "mmgid":"prime-1814062"
+          }
+        ],
+        "vendors":[
+          {
+            "id":"1814093",
+            "name":"DominantSectorTest",
+            "localName":null,
+            "aliases":[
+
+            ],
+            "individuals":[
+
+            ],
+            "advisors":[
+
+            ],
+            "competitors":[
+
+            ],
+            "universes":[
+
+            ],
+            "mmgid":"prime-1814093"
+          }
+        ],
+        "others":[
+          {
+            "id":"1018597",
+            "name":"Sexton Riley LLP",
+            "individuals":[
+              {
+                "name":"Harry Bacon",
+                "role":"CEO",
+                "asof":"2017-02-02T00:00:00",
+                "id":"903016",
+                "mmgid":"prime-903016"
+              }
+            ],
+            "localName":null,
+            "aliases":[
+
+            ],
+            "advisors":[
+
+            ],
+            "competitors":[
+
+            ],
+            "universes":[
+
+            ],
+            "mmgid":"prime-1018597"
+          },
+          {
+            "id":"1018671",
+            "name":"BK Grupe UAB",
+            "localName":"BK Grupė UAB",
+            "aliases":[
+              "BK Grupė UAB"
+            ],
+            "individuals":[
+
+            ],
+            "advisors":[
+
+            ],
+            "competitors":[
+
+            ],
+            "universes":[
+
+            ],
+            "mmgid":"prime-1018671"
+          }
+        ]
+      }
+    ],
+    "lastModifiedDate":"2017-05-23T13:12:57.000Z",
+    "publishDate":"2017-05-23T13:12:00.000Z",
+    "siteEditionTagging":[
+      {
+        "id":"8_1",
+        "product":"Debtwire",
+        "edition":"Europe"
+      },
+      {
+        "id":"16384_1",
+        "product":"Activism",
+        "edition":"Europe"
+      },
+      {
+        "id":"16384_2",
+        "product":"Activism",
+        "edition":"North America"
+      },
+      {
+        "id":"16384_8",
+        "product":"Activism",
+        "edition":"Asia"
+      }
+    ],
+    "isStrategicSnapshot":false,
+    "isAnalysis":false,
+    "isNotificationEnabled":true,
+    "isProprietary":false,
+    "status":"final",
+    "contentClassification":{
+      "contentCategory":"intelligence"
+    },
+    "editionRestrictions":[
+      "8_1",
+      "16384_1",
+      "16384_2",
+      "16384_8"
+    ],
+    "isXtract":false,
+    "mmgid":"prime-2374129",
+    "relatedCompanyIds":[
+      "1814091",
+      "1814093",
+      "1814062",
+      "1814090",
+      "1018597",
+      "1018671"
+    ],
+    "schemaVersion":"2.0"
+  }
+}
