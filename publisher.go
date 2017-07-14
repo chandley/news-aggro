@@ -9,8 +9,12 @@ import (
 	"io/ioutil"
 )
 
+type DebtwireAsLive struct {
+}
+
 // sends an intel to rabbit
-func publish() error {
+func (d *DebtwireAsLive) Publish(someBody string) error {
+
 	fmt.Println("INTEL_STORE_RABBIT_URL:", os.Getenv("INTEL_STORE_RABBIT_URL"))
 	fmt.Println("INTEL_EXCHANGE_NAME:", os.Getenv("INTEL_EXCHANGE_NAME"))
 	fmt.Println("TEST:", os.Getenv("TEST_EXCHANGE"))
@@ -38,6 +42,8 @@ func publish() error {
 
 	body, err := ioutil.ReadFile("./intel.json")
 
+	replacedBody := fmt.Sprintf(string(body), someBody)
+
 	err = ch.Publish(
 		testExchange, // exchange
 		"",     // routing key
@@ -45,7 +51,7 @@ func publish() error {
 		false,  // immediate
 		amqp.Publishing{
 			ContentType: "text/plain",
-			Body:        body,
+			Body:        []byte(replacedBody),
 		})
 	failOnError(err, "Failed to publish a message")
 

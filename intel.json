@@ -9,7 +9,7 @@
   "payload":{
     "id":"2374129",
     "headline":"Test DW notifications",
-    "body":"<p> Test</p>",
+    "body":"%s",
     "dominantCountry":{
       "mmgid":"prime-FRO",
       "name":"Faroe Islands"
