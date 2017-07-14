@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"github.com/boltdb/bolt"
+	"io/ioutil"
 )
 
 func main() {
@@ -25,13 +26,28 @@ func main() {
 
 	publish()
 
+	publisher := Publisher{}
+
 	router := http.NewServeMux()
 	server := NewServer(feed, &sources)
 
 	router.Handle("/", server)
+	router.Handle("/publish/", &publisher)
 
 	fmt.Println("Listening on 8080")
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatal(err)
 	}
+}
+
+type Publisher struct {
+
+}
+
+func (*Publisher) ServeHTTP(w http.ResponseWriter,r *http.Request) {
+	publishForm, err := ioutil.ReadFile("./publish-form.html")
+	if err != nil {
+		panic("problem reading form")
+	}
+	fmt.Fprintf(w, string(publishForm))
 }
