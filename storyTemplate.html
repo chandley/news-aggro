@@ -18,12 +18,14 @@
 <form action="/" method="post">
     <ul>
         {{range .}}
-        <li>
-            <h2>{{.Title}}</h2><h3>{{.Source}}</h3>{{.Description}} {{.Date}}
-            <a href="{{.Link}}">story</a>
-            <p>{{.Summary}}</p>
-            <button name="title" type="submit" value="{{.Title}}">Processed</button>
-        </li>
+            {{if not .Processed}}
+                <li>
+                    <h2>{{.Title}}</h2><h3>{{.Source}}</h3>{{.Description}} {{.Date}}
+                    <a href="{{.Link}}">story</a>
+                    <p>{{.Summary}}</p>
+                    <button name="title" type="submit" value="{{.Title}}">Processed</button>
+                </li>
+            {{ end }}
         {{end}}
     </ul>
 </form>

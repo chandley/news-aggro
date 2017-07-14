@@ -34,8 +34,6 @@ func NewFeed(db *bolt.DB) *Feed {
 	if err != nil { panic(err) }
 	f.tmpl = tmpl
 
-
-
 	f.DB = db
 
 	db.Update(func(tx *bolt.Tx) error {
@@ -113,27 +111,8 @@ func (f *Feed) SaveStories() {
 	}
 }
 
-func (f *Feed) UnprocessedStories () (stories []Story){
-	for _, story := range f.Stories {
-		if !story.Processed {
-			stories = append(stories, story)
-		}
-	}
-	sort.Slice(stories, func(i, j int) bool { return stories[i].Date.After(*stories[j].Date) })
-	return
-}
-
-func (f *Feed) MarkAsProcessed(title string) {
-	for i, story := range f.Stories {
-		if story.Title == title {
-			f.Stories[i].Processed = true
-			f.SaveStories()
-		}
-	}
-}
-
 func (f *Feed) RenderFeedAsHTML(out io.Writer) {
-	f.tmpl.Execute(out, f.UnprocessedStories())
+	f.tmpl.Execute(out, f.StoriesSortedByDate())
 }
 
 func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -145,4 +124,20 @@ func (f *Feed) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	f.RenderFeedAsHTML(w)
 }
+
+func (f *Feed) MarkAsProcessed(title string) {
+	for i, story := range f.Stories {
+		if story.Title == title {
+			f.Stories[i].Processed = true
+			f.SaveStories()
+		}
+	}
+}
+
+func (f *Feed) StoriesSortedByDate() (stories []Story){
+	stories = f.Stories
+	sort.Slice(stories, func(i, j int) bool { return stories[i].Date.After(*stories[j].Date) })
+	return
+}
+
 

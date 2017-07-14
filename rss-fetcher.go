@@ -56,6 +56,7 @@ func (r *RSSFetcher) GetStories() (stories []Story) {
 			Source:r.Name,
 			Date: datePublished,
 			Summary:createSummary(article.Link, r.BodySelector),
+			Processed: false,
 		})
 	}
 
