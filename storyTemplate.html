@@ -16,6 +16,16 @@
 </style>
 <meta http-equiv="refresh" content="5; URL=http://localhost:8080">
 <form action="/" method="post">
+    {{ with .SourcesNames }}
+    <ul>
+        {{range .}}
+        <li>
+            <h5>{{.}}</h5>
+        </li>
+        {{end}}
+    </ul>
+    {{ end }}
+    {{ with .Stories}}
     <ul>
         {{range .}}
             {{if not .Processed}}
@@ -28,5 +38,6 @@
             {{ end }}
         {{end}}
     </ul>
+    {{end}}
 </form>
 </html>

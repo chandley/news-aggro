@@ -12,6 +12,15 @@ type Aggregator interface{
 	AddStories(s []Story)
 }
 
+type RSSFetchers []*RSSFetcher
+
+func (f RSSFetchers) GetNames() (names []string) {
+	for _, fetcher := range f {
+		names = append(names, fetcher.Name);
+	}
+	return
+}
+
 type RSSFetcher struct{
 	URL string
 	Name string

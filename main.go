@@ -16,7 +16,7 @@ func main() {
 
 	feed := NewFeed(db)
 
-	sources := []*RSSFetcher {
+	sources := RSSFetchers {
 		//NewRSSFetcher("http://feeds.bbci.co.uk/news/rss.xml?edition=uk", "bbc news", ".story-body__inner"),
 		NewRSSFetcher("http://www.londonstockexchange.com/exchange/CompanyNewsRSS.html?newsSource=RNS&indexSymbol=UKX", "LSE FTSE whatever", ".bg"),
 		NewRSSFetcher("http://www.topazworld.com/en/rss/news", "Topaz", "#content"),
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	router := http.NewServeMux()
-	server := NewServer(feed)
+	server := NewServer(feed, sources)
 
 	router.Handle("/", server)
 

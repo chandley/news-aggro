@@ -25,7 +25,6 @@ type Feed struct {
 func NewFeed(db *bolt.DB) *Feed {
 	f := new(Feed)
 
-
 	f.DB = db
 
 	db.Update(func(tx *bolt.Tx) error {
