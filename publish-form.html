@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Publish an intel</title>
     <form action="/publish" method="post">
-        <label for=""
-        <textarea name="message-body" rows="10" placeholder="Insert your text here">%s</textarea>
+        <label for="title">Title</label><input type="text" name="title" value="%s"><br />
+        <textarea name="message-body" rows="50" cols="200" placeholder="Insert your text here">%s</textarea><br />
         <input type="submit" value="Publish to Aslive">
     </form>
 </head>

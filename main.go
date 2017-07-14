@@ -72,9 +72,10 @@ func (p *Publisher) ServeHTTP(w http.ResponseWriter,r *http.Request) {
 	}
 
 	var body string
-	if r.URL.Query().Get("title")!=""{
-		body = p.storyDatabase.GetStory(r.URL.Query().Get("title")).Summary
+	title := r.URL.Query().Get("title")
+	if title !=""{
+		body = p.storyDatabase.GetStory(title).Summary
 	}
 
-	fmt.Fprintf(w, string(publishForm), body)
+	fmt.Fprintf(w, string(publishForm), title, body)
 }
