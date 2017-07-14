@@ -23,6 +23,8 @@ func main() {
 	//sources.Add("https://investing.einnews.com/rss/5hMDxhc02nswfIlH", "EIN feed", ".none")
 	//sources.Add("http://lorem-rss.herokuapp.com/feed?unit=second&interval=10", "Lorem ipsum feed", ".none"),
 
+	publish()
+
 	router := http.NewServeMux()
 	server := NewServer(feed, &sources)
 
