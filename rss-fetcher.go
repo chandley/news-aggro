@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"github.com/PuerkitoBio/goquery"
 	"log"
+	"github.com/boltdb/bolt"
+	"fmt"
+	"encoding/json"
 )
 
 type Aggregator interface{
@@ -16,10 +19,47 @@ type Aggregator interface{
 type RSSFetchers struct {
 	Sources []*RSSFetcher
 	Aggregator Aggregator
+	DB *bolt.DB
 }
 
-func NewRSSFetchers(aggregator Aggregator) RSSFetchers {
-	return RSSFetchers{Aggregator: aggregator}
+func NewRSSFetchers(db *bolt.DB, aggregator Aggregator) RSSFetchers {
+	f := RSSFetchers{Aggregator: aggregator, DB: db}
+
+	db.Update(func(tx *bolt.Tx) error {
+		_ , err := tx.CreateBucket([]byte("sources"))
+		if err != nil {
+			return fmt.Errorf("create bucket: %s", err)
+		}
+		return nil
+	})
+
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("sources"))
+		rawSources := b.Get([]byte("sources"))
+
+		if rawSources != nil {
+			var sourcesFromDisk []RSSFetcher
+
+			err := json.Unmarshal( rawSources, &sourcesFromDisk )
+			if err != nil {
+				log.Println("problem parsing sources from bolt", err)
+				return nil
+			}
+
+			log.Println("Loaded", len(sourcesFromDisk), "from db", sourcesFromDisk[0].Name)
+
+			for _, source := range sourcesFromDisk {
+				f.Add(source.URL, source.Name, source.BodySelector)
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Println("problem loading stories from bolt", err)
+	}
+
+	return f
 }
 
 func (f *RSSFetchers) GetNames() (names []string) {
@@ -37,7 +77,21 @@ func (f *RSSFetchers) Add(url string, name string, selector string) {
 	newFetcher := NewRSSFetcher(url, name, selector)
 
 	f.Sources = append(f.Sources, newFetcher)
+	f.SaveSources()
 	go newFetcher.GiveNewStoriesTo(f.Aggregator)
+}
+
+func (f *RSSFetchers) SaveSources() {
+	err := f.DB.Update(func(tx *bolt.Tx) error {
+		sourcesAsJSON, _ := json.Marshal(f.Sources)
+		b := tx.Bucket([]byte("sources"))
+		err := b.Put([]byte("sources"), sourcesAsJSON)
+		return err
+	})
+
+	if err != nil {
+		log.Println("Problem persisting sources to bolt")
+	}
 }
 
 type RSSFetcher struct{
