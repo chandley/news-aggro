@@ -38,7 +38,8 @@
                     <h2>{{.Title}}</h2><h3>{{.Source}}</h3>{{.Description}} {{.Date}}
                     <a href="{{.Link}}">story</a>
                     <p>{{.Summary}}</p>
-                    <button name="title" type="submit" value="{{.Title}}">Processed</button>
+                    <button name="title" type="submit" value="{{.Title}}">Ignore</button>
+                    <button name="publish" type="submit" value="{{.Title}}">Publish</button>
                 </li>
             {{ end }}
         {{end}}
