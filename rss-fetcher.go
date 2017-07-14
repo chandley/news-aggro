@@ -15,17 +15,15 @@ type Aggregator interface{
 type RSSFetcher struct{
 	URL string
 	Name string
-	Aggregator Aggregator
 	Titles map[string]int
 	BodySelector string
 }
 
-func NewRSSFetcher(url string, name string, selector string, aggregator Aggregator) *RSSFetcher {
+func NewRSSFetcher(url string, name string, selector string) *RSSFetcher {
 	titles := make(map[string]int)
 	return &RSSFetcher{
 		URL: url,
 		Name: name,
-		Aggregator:aggregator,
 		Titles:titles,
 		BodySelector:selector,
 	}
@@ -36,8 +34,6 @@ const numberOfSentences = 3
 func (r *RSSFetcher) GetStories() (stories []Story) {
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL(r.URL)
-
-
 
 	for _, article := range feed.Items {
 
@@ -60,6 +56,7 @@ func (r *RSSFetcher) GetStories() (stories []Story) {
 			Source:r.Name,
 			Date: datePublished,
 			Summary:createSummary(article.Link, r.BodySelector),
+			Processed: false,
 		})
 	}
 
@@ -86,10 +83,10 @@ func createSummary(url, selector string) string {
 
 }
 
-func (r *RSSFetcher) ListenForUpdates(){
+func (r *RSSFetcher) GiveNewStoriesTo(aggregator Aggregator){
 	tkr := time.NewTicker(5 * time.Second)
 
 	for _ = range tkr.C{
-		r.Aggregator.AddStories(r.GetStories())
+		aggregator.AddStories(r.GetStories())
 	}
 }
