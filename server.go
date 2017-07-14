@@ -10,6 +10,7 @@ import (
 type StoryFeed interface{
 	GetStories() []Story
 	MarkAsProcessed(title string)
+	GetStoryText(title string) string
 }
 
 type SourcesList interface{
@@ -51,7 +52,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		} else  {
 			log.Println(r.FormValue("action"))
 			if len(r.FormValue("publish")) > 0  {
-				s.publishTemplate.Execute(w, "banana")
+				s.publishTemplate.Execute(w, s.feed.GetStoryText(r.FormValue("publish")))
 				//publishForm, err := ioutil.ReadFile("./publish-form.html") // TODO change to template with stuff
 				//if err != nil {
 				//	panic("problem reading form")

@@ -118,6 +118,15 @@ func (f *Feed) MarkAsProcessed(title string) {
 	}
 }
 
+func (f *Feed) GetStoryText(title string) string {
+	for i, story := range f.Stories {
+		if story.Title == title {
+			return f.Stories[i].Description
+		}
+	}
+	return ""
+}
+
 func (f *Feed) GetStories() []Story{
 	return f.Stories
 }
